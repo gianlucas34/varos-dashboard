@@ -3,8 +3,7 @@ import { type Metadata } from 'next'
 import { Red_Hat_Display } from 'next/font/google'
 
 const redHatDisplay = Red_Hat_Display({
-  variable: '--font-red-hat-display',
-  weight: ['500', '700'],
+  weight: ['400', '500', '700'],
   subsets: ['latin'],
 })
 
@@ -19,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={redHatDisplay.className}>{children}</body>
+      <body className={`${redHatDisplay.className} bg-background text-text`}>
+        {children}
+      </body>
     </html>
   )
 }

@@ -19,4 +19,7 @@ model Customer {
   address   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([email, cpf])
+  @@map("customers")
 }

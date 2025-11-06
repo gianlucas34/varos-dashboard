@@ -18,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${redHatDisplay.className} bg-background text-text`}>
+      <body
+        className={`${redHatDisplay.className} flex flex-col min-w-screen min-h-screen bg-background text-text`}
+      >
         {children}
       </body>
     </html>

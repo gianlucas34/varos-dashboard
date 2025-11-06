@@ -2,6 +2,7 @@
 import * as React from 'react'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
+import { Label } from '@/components/label'
 import { cn } from '@/utils'
 
 type Option = {
@@ -10,39 +11,41 @@ type Option = {
 }
 
 type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root> & {
+  label?: string
   placeholder: string
   options: Option[]
+  error?: string
   className?: string
   contentClassName?: string
 }
 
-function Select({
+export function Select({
+  label,
   placeholder,
   options,
+  error,
   className,
   contentClassName,
   ...props
 }: SelectProps) {
   return (
-    <SelectPrimitive.Root data-slot="select" {...props}>
-      <SelectTrigger className={className}>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent className={contentClassName}>
-        {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </SelectPrimitive.Root>
+    <div>
+      {!!label && <Label className="text-detail mb-2">{label}</Label>}
+      <SelectPrimitive.Root data-slot="select" {...props}>
+        <SelectTrigger className={cn(className, !!error && 'mb-1')}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className={contentClassName}>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectPrimitive.Root>
+      {!!error && <span className="text-red-500">{error}</span>}
+    </div>
   )
-}
-
-function SelectGroup({
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Group>) {
-  return <SelectPrimitive.Group data-slot="select-group" {...props} />
 }
 
 function SelectValue({
@@ -64,7 +67,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        'flex items-center justify-between w-fit bg-transparent text-sm border border-border px-4 py-2.5 gap-x-4 rounded-md shadow-md outline-none whitespace-nowrap transition-[color,box-shadow] data-placeholder:text-detail focus:ring-1 focus:ring-detail disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-10 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2',
+        'flex items-center justify-between w-full bg-foreground border border-border px-4 py-2.5 gap-x-4 rounded-md shadow-md outline-none whitespace-nowrap transition-[color,box-shadow] data-placeholder:text-detail focus:ring-1 focus:ring-detail disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-10 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2',
         className,
       )}
       {...props}
@@ -89,7 +92,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          'relative min-w-32 border border-border rounded-md shadow-md overflow-x-hidden overflow-y-auto z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin)',
+          'relative min-w-32 max-h-96 bg-foreground border border-border rounded-md shadow-md overflow-x-hidden overflow-y-auto z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--radix-select-content-transform-origin)',
           position === 'popper' &&
             'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
           className,
@@ -114,19 +117,6 @@ function SelectContent({
   )
 }
 
-function SelectLabel({
-  className,
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Label>) {
-  return (
-    <SelectPrimitive.Label
-      data-slot="select-label"
-      className={cn('text-detail px-2 py-1.5 text-xs', className)}
-      {...props}
-    />
-  )
-}
-
 function SelectItem({
   className,
   children,
@@ -148,19 +138,6 @@ function SelectItem({
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
-  )
-}
-
-function SelectSeparator({
-  className,
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Separator>) {
-  return (
-    <SelectPrimitive.Separator
-      data-slot="select-separator"
-      className={cn('bg-border pointer-events-none -mx-1 my-1 h-px', className)}
-      {...props}
-    />
   )
 }
 
@@ -198,17 +175,4 @@ function SelectScrollDownButton({
       <ChevronDownIcon className="size-4" />
     </SelectPrimitive.ScrollDownButton>
   )
-}
-
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
 }

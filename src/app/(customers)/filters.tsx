@@ -1,6 +1,6 @@
 import { Select } from '@/components'
 
-export const HomeFilters = () => (
+export const CustomersFilters = () => (
   <div className="flex items-center gap-x-6 p-4 border border-border rounded-md text-gray-200">
     <div className="flex items-center gap-x-2">
       <span>Nome do consultor</span>
@@ -16,7 +16,7 @@ export const HomeFilters = () => (
             value: 'janedoe',
           },
         ]}
-        className="bg-gray-200/4"
+        className="w-fit bg-gray-200/4 text-sm"
         contentClassName="bg-background"
       />
     </div>
@@ -34,7 +34,7 @@ export const HomeFilters = () => (
             value: 'janedoe',
           },
         ]}
-        className="bg-gray-200/4"
+        className="w-fit bg-gray-200/4 text-sm"
         contentClassName="bg-background"
       />
     </div>

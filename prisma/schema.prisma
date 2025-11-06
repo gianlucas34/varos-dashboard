@@ -9,17 +9,40 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Customer {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  phone     String
-  cpf       String   @unique
-  age       Int
-  address   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Role {
+  CONSULTANT
+  CUSTOMER
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  phone         String
+  cpf           String   @unique
+  age           Int
+  role          Role
+  consultant_id String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  address    Address?
+  customers  User[]   @relation("ConsultantCustomers")
+  consultant User?    @relation("ConsultantCustomers", fields: [consultant_id], references: [id])
 
   @@index([email, cpf])
-  @@map("customers")
+  @@map("users")
+}
+
+model Address {
+  id         String  @id @default(uuid())
+  street     String
+  state      String
+  zip_code   String
+  complement String?
+  user_id    String  @unique
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("addresses")
 }

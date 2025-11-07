@@ -832,6 +832,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/nextjs-monorepo-workaround-plugin@npm:^6.19.0":
+  version: 6.19.0
+  resolution: "@prisma/nextjs-monorepo-workaround-plugin@npm:6.19.0"
+  checksum: 10c0/3a91e3ac2a917a926fed74daa7e6bc596aa5044e943ea917228fd8001214c9d98d0019af5bf64c117107b59b4842fe8cf4a45bee333fa7a995d05a298dc8c5e1
+  languageName: node
+  linkType: hard
+
 "@radix-ui/number@npm:1.1.1":
   version: 1.1.1
   resolution: "@radix-ui/number@npm:1.1.1"
@@ -5579,6 +5586,7 @@ __metadata:
   resolution: "varos-dashboard@workspace:."
   dependencies:
     "@prisma/client": "npm:^6.19.0"
+    "@prisma/nextjs-monorepo-workaround-plugin": "npm:^6.19.0"
     "@radix-ui/react-dialog": "npm:^1.1.15"
     "@radix-ui/react-label": "npm:^2.1.8"
     "@radix-ui/react-popover": "npm:^1.1.15"

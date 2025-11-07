@@ -1,15 +1,67 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Plus } from 'lucide-react'
+import { UserWhereInput } from '@database/generated/models'
 import { prisma } from '@/lib'
 import { Button, Table } from '@/components'
+import { parseDateRangeFromQuery } from '@/utils'
 import { CustomersMetric } from '@/app/(customers)/metric'
 import { CustomersFilters } from '@/app/(customers)/filters'
 
-export default async function CustomersPage() {
+type CustomersPageProps = {
+  searchParams: Promise<{
+    'consultant-name'?: string
+    'consultant-email'?: string
+    'start-date'?: string
+    'end-date'?: string
+  }>
+}
+
+export default async function CustomersPage({
+  searchParams,
+}: CustomersPageProps) {
+  const {
+    'consultant-name': consultantName,
+    'consultant-email': consultantEmail,
+    'start-date': startDate,
+    'end-date': endDate,
+  } = await searchParams
+
+  const where: UserWhereInput = { role: 'CUSTOMER' }
+
+  if (consultantName || consultantEmail) {
+    where.consultant = {}
+
+    if (consultantName) {
+      where.consultant.name = {
+        contains: consultantName,
+        mode: 'insensitive',
+      }
+    }
+
+    if (consultantEmail) {
+      where.consultant.email = consultantEmail
+    }
+  }
+
+  const range = parseDateRangeFromQuery(startDate ?? null, endDate ?? null)
+
+  if (range?.from && range?.to) {
+    where.created_at = {
+      gte: range.from,
+      lte: range.to,
+    }
+  }
+
+  const consultants = await prisma.user.findMany({
+    where: { role: 'CONSULTANT' },
+  })
   const customers = await prisma.user.findMany({
-    where: { role: 'CUSTOMER' },
-    include: { address: true },
+    where,
+    include: {
+      address: true,
+      consultant: true,
+    },
   })
   const data = customers.map((customer) => ({
     ...customer,
@@ -39,7 +91,7 @@ export default async function CustomersPage() {
                 <Plus />
               </Button>
             </Link>
-            <CustomersFilters />
+            <CustomersFilters consultants={consultants} />
           </div>
         </div>
         <Table

@@ -1,3 +1,3 @@
-import { PrismaClient } from '@database/generated/client'
+import { PrismaClient } from '@/generated/prisma/client'
 
 export const prisma = new PrismaClient()

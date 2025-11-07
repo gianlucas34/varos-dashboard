@@ -1,4 +1,4 @@
-import { UserGetPayload } from '@database/generated/models'
+import { UserGetPayload } from '@/generated/prisma/models'
 import { prisma } from '@/lib'
 import { UpsertUserForm } from '@/app/users/upsert/form'
 

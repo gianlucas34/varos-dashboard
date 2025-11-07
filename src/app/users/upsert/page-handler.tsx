@@ -1,5 +1,5 @@
 import { prisma } from '@/lib'
-import { UserGetPayload } from '@/app/generated/prisma/models'
+import { UserGetPayload } from '@/generated/prisma/models'
 import { UpsertUserForm } from '@/app/users/upsert/form'
 
 type UpsertUserPageHandlerProps = {

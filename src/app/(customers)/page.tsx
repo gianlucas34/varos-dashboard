@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react'
 import { prisma } from '@/lib'
 import { Button, Table } from '@/components'
 import { parseDateRangeFromQuery } from '@/utils'
-import { UserWhereInput } from '@/app/generated/prisma/models'
+import { UserWhereInput } from '@/generated/prisma/models'
 import { CustomersMetric } from '@/app/(customers)/metric'
 import { CustomersFilters } from '@/app/(customers)/filters'
 

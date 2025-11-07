@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { DateRange } from 'react-day-picker'
 import { DatePicker, Select } from '@/components'
 import { parseDateRangeFromQuery } from '@/utils'
-import { UserModel } from '@/app/generated/prisma/models'
+import { UserModel } from '@/generated/prisma/models'
 
 type CustomersFiltersProps = {
   consultants: UserModel[]

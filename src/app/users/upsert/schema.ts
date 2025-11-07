@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Role } from '@/app/generated/prisma/enums'
+import { Role } from '@/generated/prisma/enums'
 
 export const upsertUserSchema = z.object({
   name: z.string().min(1, { error: 'O nome deve ser informado!' }),

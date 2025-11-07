@@ -123,6 +123,24 @@ export const updateUser = async (
   }
 }
 
+export const deleteUser = async (id: string): Promise<FormState> => {
+  const user = await prisma.user.findUnique({ where: { id } })
+
+  if (!user) {
+    return {
+      message: 'Usuário nao encontrado!',
+      isError: true,
+    }
+  }
+
+  await prisma.user.delete({ where: { id } })
+
+  return {
+    message: 'Usuário deletado com sucesso!',
+    isError: false,
+  }
+}
+
 type ValidateFormDataReturnProps =
   | {
       success: true

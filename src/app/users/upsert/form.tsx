@@ -5,7 +5,7 @@ import { UserGetPayload, UserModel } from '@/generated/prisma/models'
 import { Role } from '@/generated/prisma/enums'
 import { roleTranslations, statesOfBrazil } from '@/constants'
 import { Button, Input, Loading, MultiSelect, Select, Tabs } from '@/components'
-import { createUser, updateUser } from '@/app/users/upsert/actions'
+import { createUser, updateUser, deleteUser } from '@/app/users/upsert/actions'
 
 type UpsertUserFormProps = {
   currentUserData?: UserGetPayload<{
@@ -21,25 +21,34 @@ export const UpsertUserForm = ({
   customers,
 }: UpsertUserFormProps) => {
   const isUpdate = !!currentUserData
-  const action = isUpdate
-    ? updateUser.bind(null, currentUserData.id)
-    : createUser
 
   const router = useRouter()
-  const [formState, formAction, isPending] = useActionState(action, null)
+  const [upsertFormState, upsertFormAction, isUpserting] = useActionState(
+    isUpdate ? updateUser.bind(null, currentUserData.id) : createUser,
+    null,
+  )
+  const [deleteUserFormState, deleteUserFormAction, isDeleting] =
+    useActionState(deleteUser.bind(null, currentUserData?.id ?? ''), null)
   const [role, setRole] = useState<Role | undefined>(currentUserData?.role)
 
   useEffect(() => {
-    if (formState && !formState.isError) {
+    if (
+      (upsertFormState && !upsertFormState.isError) ||
+      (deleteUserFormState && !deleteUserFormState.isError)
+    ) {
       router.push('/')
     }
-  }, [formState, router])
+  }, [router, upsertFormState, deleteUserFormState])
 
   return (
     <form className="w-208 my-4 border border-border rounded-2xl shadow-md">
       <div className="flex items-center justify-end gap-x-2.5 px-2.5 py-4 border-b border-b-border">
-        <Button size="lg" className="rounded-full" formAction={formAction}>
-          {isPending ? (
+        <Button
+          size="lg"
+          className="rounded-full"
+          formAction={upsertFormAction}
+        >
+          {isUpserting ? (
             <Loading />
           ) : isUpdate ? (
             'Atualizar usuário'
@@ -48,8 +57,13 @@ export const UpsertUserForm = ({
           )}
         </Button>
         {isUpdate && (
-          <Button variant="secondary" size="lg" className="rounded-full">
-            Deletar usuário
+          <Button
+            variant="secondary"
+            size="lg"
+            className="rounded-full"
+            formAction={deleteUserFormAction}
+          >
+            {isDeleting ? <Loading /> : 'Deletar usuário'}
           </Button>
         )}
       </div>
@@ -67,7 +81,7 @@ export const UpsertUserForm = ({
               label: roleTranslations[role],
             }))}
             defaultValue={currentUserData?.role}
-            error={formState?.validationErrors?.role}
+            error={upsertFormState?.validationErrors?.role}
             onValueChange={(value) => setRole(value as Role)}
           />
           <div className="grid grid-cols-2 gap-6">
@@ -76,7 +90,7 @@ export const UpsertUserForm = ({
               label="Nome"
               placeholder="Digite o nome"
               defaultValue={currentUserData?.name}
-              error={formState?.validationErrors?.name}
+              error={upsertFormState?.validationErrors?.name}
             />
             <Input
               name="phone"
@@ -84,7 +98,7 @@ export const UpsertUserForm = ({
               placeholder="Digite o telefone"
               maxLength={11}
               defaultValue={currentUserData?.phone}
-              error={formState?.validationErrors?.phone}
+              error={upsertFormState?.validationErrors?.phone}
             />
           </div>
           <Input
@@ -93,7 +107,7 @@ export const UpsertUserForm = ({
             label="Email"
             placeholder="Digite o email"
             defaultValue={currentUserData?.email}
-            error={formState?.validationErrors?.email}
+            error={upsertFormState?.validationErrors?.email}
           />
         </div>
         <Tabs
@@ -111,7 +125,7 @@ export const UpsertUserForm = ({
                       label="Idade"
                       placeholder="28 anos"
                       defaultValue={currentUserData?.age}
-                      error={formState?.validationErrors?.age}
+                      error={upsertFormState?.validationErrors?.age}
                     />
                     <Input
                       name="cpf"
@@ -119,7 +133,7 @@ export const UpsertUserForm = ({
                       placeholder="000.000.000-00"
                       maxLength={11}
                       defaultValue={currentUserData?.cpf}
-                      error={formState?.validationErrors?.cpf}
+                      error={upsertFormState?.validationErrors?.cpf}
                     />
                     <Input
                       name="address.zipCode"
@@ -127,7 +141,9 @@ export const UpsertUserForm = ({
                       placeholder="Insira o CEP"
                       maxLength={8}
                       defaultValue={currentUserData?.address?.zip_code}
-                      error={formState?.validationErrors?.['address.zipCode']}
+                      error={
+                        upsertFormState?.validationErrors?.['address.zipCode']
+                      }
                     />
                     <Select
                       name="address.state"
@@ -135,7 +151,9 @@ export const UpsertUserForm = ({
                       placeholder="Selecione o estado"
                       options={statesOfBrazil}
                       defaultValue={currentUserData?.address?.state}
-                      error={formState?.validationErrors?.['address.state']}
+                      error={
+                        upsertFormState?.validationErrors?.['address.state']
+                      }
                     />
                   </div>
                   <Input
@@ -143,7 +161,9 @@ export const UpsertUserForm = ({
                     label="Endereço"
                     placeholder="Digite o endereço"
                     defaultValue={currentUserData?.address?.street}
-                    error={formState?.validationErrors?.['address.street']}
+                    error={
+                      upsertFormState?.validationErrors?.['address.street']
+                    }
                   />
                   <Input
                     name="address.complement"
@@ -152,7 +172,9 @@ export const UpsertUserForm = ({
                     defaultValue={
                       currentUserData?.address?.complement ?? undefined
                     }
-                    error={formState?.validationErrors?.['address.complement']}
+                    error={
+                      upsertFormState?.validationErrors?.['address.complement']
+                    }
                   />
                 </div>
               ),
@@ -170,7 +192,7 @@ export const UpsertUserForm = ({
                     value: customer.id,
                     label: customer.name,
                   }))}
-                  error={formState?.validationErrors?.customers}
+                  error={upsertFormState?.validationErrors?.customers}
                 />
               ),
             },

@@ -1,4 +1,4 @@
-import { Role } from '@/generated/prisma/enums'
+import { Role } from '@/app/generated/prisma/enums'
 
 export const roleTranslations = {
   [Role.CONSULTANT]: 'Consultor',

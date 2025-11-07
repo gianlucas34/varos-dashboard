@@ -1,9 +1,9 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { DateRange } from 'react-day-picker'
-import { UserModel } from '@/generated/prisma/models'
 import { DatePicker, Select } from '@/components'
 import { parseDateRangeFromQuery } from '@/utils'
+import { UserModel } from '@/app/generated/prisma/models'
 
 type CustomersFiltersProps = {
   consultants: UserModel[]

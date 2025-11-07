@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Plus } from 'lucide-react'
-import { UserWhereInput } from '@/generated/prisma/models'
 import { prisma } from '@/lib'
 import { Button, Table } from '@/components'
 import { parseDateRangeFromQuery } from '@/utils'
+import { UserWhereInput } from '@/app/generated/prisma/models'
 import { CustomersMetric } from '@/app/(customers)/metric'
 import { CustomersFilters } from '@/app/(customers)/filters'
 
